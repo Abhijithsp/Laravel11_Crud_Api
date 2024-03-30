@@ -1,4 +1,4 @@
-# Laravel 11 Sanctum REST API Authentication Example
+# Laravel 11 Rest Api With Sanctum Auth API
 
   - Step 1: Create/Install Laravel 11 Project
   - Step 2: Install Sanctum API(no api route present in Laravel 11 need to add via command: php artisan install:api)
