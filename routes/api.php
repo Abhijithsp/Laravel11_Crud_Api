@@ -6,9 +6,9 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\RegisterController;
 
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// Route::get('/user', function (Request $request) {
 //     return $request->user();
-// });
+// })->middleware(Authenticate::using('sanctum'));
 
 
 Route::middleware('auth:sanctum')->group( function () {
