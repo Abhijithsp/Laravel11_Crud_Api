@@ -28,23 +28,27 @@ class RegisterController extends BaseController
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('taskapp')->plainTextToken;
+        $success['id'] =  $user->id;
         $success['name'] =  $user->name;
+        $success['token'] =  $user->createToken('product_api')->plainTextToken;
 
-        return $this->sendResponse($success, 'User register successfully.');
+
+        return $this->sendResponse('User register successfully.',$success);
     }
 
     public function login(Request $request): JsonResponse
     {
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
-            $success['token'] =  $user->createToken('taskapp')->plainTextToken;
+            $success['id'] =  $user->id;
             $success['name'] =  $user->name;
+            $success['token'] =  $user->createToken('product_api')->plainTextToken;
 
-            return $this->sendResponse($success, 'User login successfully.');
+
+            return $this->sendResponse('User login successfully.',$success);
         }
         else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised,Please check login details']);
         }
     }
 }

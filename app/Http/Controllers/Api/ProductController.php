@@ -16,11 +16,15 @@ class ProductController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : JsonResponse
     {
          $products = Product::all();
+         if($products->isEmpty()){
+            return $this->sendResponse([], 'Products details not available');
+         }else{
+            return $this->sendResponse('Products details fetched successfully.',ProductResource::collection($products));
+         }
 
-        return $this->sendResponse(ProductResource::collection($products), 'Products details fetched successfully.');
     }
 
     /**
@@ -34,17 +38,35 @@ class ProductController extends BaseController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+        ]);
+
+         if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+         $product = Product::create($request->all());
+
+        return $this->sendResponse('Product details created successfully.',new ProductResource($product));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        //
+       $product = Product::find($id);
+
+         if (is_null($product)) {
+            return $this->sendError('Product details not found.');
+        }else{
+            return $this->sendResponse('Product retrieved successfully.',new ProductResource($product));
+        }
     }
 
     /**
@@ -58,9 +80,18 @@ class ProductController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+        ]);
+
+        $product->update($request->all());
+
+        return $this->sendResponse( 'Product updated successfully.',new ProductResource($product));
     }
 
     /**
